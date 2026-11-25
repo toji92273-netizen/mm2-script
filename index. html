@@ -1,11 +1,125 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Главная страница</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Script Hub</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+  body {
+    background: #0f0f1a;
+    color: #e0e0e0;
+    min-height: 100vh;
+    padding: 40px 20px;
+  }
+  h1 {
+    text-align: center;
+    color: #00ffaa;
+    margin-bottom: 10px;
+    text-shadow: 0 0 20px rgba(0,255,170,0.5);
+  }
+  .subtitle { text-align: center; color: #888; margin-bottom: 40px; }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+  .card {
+    background: #1a1a2e;
+    border: 1px solid #2a2a4a;
+    border-radius: 14px;
+    padding: 22px;
+    transition: 0.25s;
+  }
+  .card:hover {
+    border-color: #00ffaa;
+    transform: translateY(-4px);
+    box-shadow: 0 8px 30px rgba(0,255,170,0.15);
+  }
+  .card h3 { color: #00ffaa; margin-bottom: 8px; font-size: 1.2em; }
+  .card p { color: #999; font-size: 0.9em; margin-bottom: 16px; line-height: 1.4; }
+  .code {
+    background: #0a0a14;
+    border: 1px solid #2a2a4a;
+    border-radius: 8px;
+    padding: 10px;
+    font-family: 'Consolas', monospace;
+    font-size: 0.75em;
+    color: #7dd3fc;
+    word-break: break-all;
+    margin-bottom: 14px;
+    max-height: 70px;
+    overflow: hidden;
+  }
+  button {
+    width: 100%;
+    padding: 12px;
+    background: #00ffaa;
+    color: #0f0f1a;
+    border: none;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 0.95em;
+    cursor: pointer;
+    transition: 0.2s;
+  }
+  button:hover { background: #00cc88; }
+  button.copied { background: #00cc88; }
+  .footer { text-align: center; color: #555; margin-top: 50px; font-size: 0.85em; }
+</style>
 </head>
 <body>
-  <h1>Привет, мир!</h1>
+
+<h1>⚡ My Script Hub</h1>
+<p class="subtitle">Нажми на кнопку — код скопируется в буфер обмена</p>
+
+<div class="grid" id="grid"></div>
+
+<p class="footer">Только для образовательных целей. Используй на свой риск.</p>
+
+<script>
+// 📝 СПИСОК ТВОИХ СКРИПТОВ — редактируй здесь
+const scripts = [
+  {
+    name: "Fling GUI (MM2)",
+    desc: "Отбрасывает выбранного игрока через GUI.",
+    url: "https://toji92273-netizen.github.io/mm2-script/fling.lua"
+  }
+];
+
+const grid = document.getElementById('grid');
+
+scripts.forEach((s, i) => {
+  const code = `loadstring(game:HttpGet("${s.url}"))()`;
+  const card = document.createElement('div');
+  card.className = 'card';
+  card.innerHTML = `
+    <h3>${s.name}</h3>
+    <p>${s.desc}</p>
+    <div class="code">${code}</div>
+    <button data-code='${code}'>📋 Скопировать</button>
+  `;
+  grid.appendChild(card);
+});
+
+// Кнопка копирования
+document.addEventListener('click', (e) => {
+  if (e.target.tagName === 'BUTTON' && e.target.dataset.code) {
+    const btn = e.target;
+    navigator.clipboard.writeText(btn.dataset.code).then(() => {
+      const original = btn.textContent;
+      btn.textContent = '✅ Скопировано!';
+      btn.classList.add('copied');
+      setTimeout(() => {
+        btn.textContent = original;
+        btn.classList.remove('copied');
+      }, 1500);
+    });
+  }
+});
+</script>
+
 </body>
 </html>
